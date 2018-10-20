@@ -138,9 +138,9 @@ Function.prototype是唯一例外, 它是一个空函数。
 
 ## 原型链
 
-![prototype](./Prototype-colored.jpg)
+![prototype-colored](./Prototype-colored.jpg)
 
-![prototype](./Prototype-graph.jpg)
+![prototype-graph](./Prototype-graph.jpg)
 
 原型链的形成是真正是靠__proto__ 而非prototype。
 
