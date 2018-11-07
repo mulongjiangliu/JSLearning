@@ -15,7 +15,7 @@ JavaScript 中，对象是7种原始类型(simple primitive type)的一种。
     typeof undefined; // undefined
     typeof null; // object; This is a language bug when JS was created.
     typeof {}; // object
-    typeof Symbol(); // symbol; ES6+
+    typeof Symbol(); // symbol; ES6+; It is mostly used as an identifier for object properties.
 ```
 
 注：funtions 是object的一个子类型 (technically, a "callable object")。
@@ -26,7 +26,7 @@ JavaScript 中，对象是7种原始类型(simple primitive type)的一种。
 
 Object可以分为普通对象和函数对象。
 
-凡是通过 new Function() 创建的对象都是函数对象(构造器)，其他的都是普通对象。
+凡是通过 new Function() 创建的对象都是函数对象(构造器)，其中还包括JS内置的构造器，其他的都是普通对象。
 
 ```JS
     //  普通对象
@@ -46,9 +46,9 @@ Object可以分为普通对象和函数对象。
 
 所有的构造器都来自于Function.prototype，甚至包括根构造器Object及Function自身。
 
-Number, Boolean, String, Object, Function, Array, RegExp, Error, Date, Symbol.
+Number, Boolean, String, Object, Function, Array, RegExp, Error, Date.
 
-注: Math, JSON 是普通对象，不能new。
+注: Math, JSON 是普通对象, Symbol是个特殊函数(incomplete constructor)，都不能new。
 
 ```JS
     Object.constructor === Function; // true
@@ -67,7 +67,7 @@ Number, Boolean, String, Object, Function, Array, RegExp, Error, Date, Symbol.
 
 ## prototype and `__proto__`
 
-除了null, undefined外，每个对象都有 `__proto__` 属性，但只有函数对象才有 prototype 属性。
+除了null, undefined, Symbol()外，其他都有 `__proto__` 属性，但只有函数对象才有 prototype 属性。
 
 **所有普通对象的 `__proto__` 都指向其构造器的 prototype**
 
@@ -163,49 +163,4 @@ Function.prototype是唯一例外, 它是一个空函数。
 
 ```JS
     function Animal(props) {
-        this.name = props.name || 'Unnamed';
-    }
-
-    Animal.prototype.hello = function () {
-        console.log('Hello, ' + this.name + '!');
-    }
-
-    function Cat(props) {
-        // 调用Animal构造函数，绑定this变量:
-        Animal.call(this, props);
-        this.age = props.age || 1;
-    }
-```
-
-```JS
-    new Cat() ----> Cat.prototype ----> Object.prototype ----> null
-
-    // 改变原型链实现正确继承:
-    new Cat() ----> Cat.prototype ----> Animal.prototype ----> Object.prototype ----> null
-
-```
-
-```JS
-    //pre-ES6
-    Cat.prototype = Object.create(Animal.prototype);
-    Object.create = function(obj) {
-        function F(){} // 桥接函数
-        F.prototype = obj;
-        return new F();
-    }
-
-    // ES6+
-    Cat.prototype.__proto__ = Animal.prototype; // not-recommended
-
-    Object.setPrototypeOf(Cat.prototype, Animal.prototype);
-```
-
-Inspecting "Inheritance" Relationships
-
-```JS
-    let tom = new Cat({name: 'Tom'});
-    tom.hello();
-    tom instanceof Cat;
-    tom instanceof Animal;
-    tom.__proto__.__proto__;
-```
+        this.name = props.name || '
