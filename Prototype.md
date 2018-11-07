@@ -122,7 +122,7 @@ let f1 = new F1() 等同于：
 ```JS
     let f1 = new Object(); // same with: let f1 = {};
     f1.__proto__ = F1.prototype;
-    F1.call(ff);
+    F1.call(f1);
 ```
 
 Function.prototype是唯一例外, 它是一个空函数。
