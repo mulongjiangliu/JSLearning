@@ -26,7 +26,7 @@ JavaScript 中，对象是7种原始类型(simple primitive type)的一种。
 
 Object可以分为普通对象和函数对象。
 
-凡是通过 new Function() 创建的对象都是函数对象(构造器)，其中还包括JS内置的构造器，其他的都是普通对象。
+凡是通过 new Function() 创建的对象都是函数对象，其中还包括JS内置的函数对象，其他的都是普通对象。
 
 ```JS
     //  普通对象
@@ -163,4 +163,49 @@ Function.prototype是唯一例外, 它是一个空函数。
 
 ```JS
     function Animal(props) {
-        this.name = props.name || '
+        this.name = props.name || 'Unnamed';
+    }
+
+    Animal.prototype.hello = function () {
+        console.log('Hello, ' + this.name + '!');
+    }
+
+    function Cat(props) {
+        // 调用Animal构造函数，绑定this变量:
+        Animal.call(this, props);
+        this.age = props.age || 1;
+    }
+```
+
+```JS
+    new Cat() ----> Cat.prototype ----> Object.prototype ----> null
+
+    // 改变原型链实现正确继承:
+    new Cat() ----> Cat.prototype ----> Animal.prototype ----> Object.prototype ----> null
+
+```
+
+```JS
+    //pre-ES6
+    Cat.prototype = Object.create(Animal.prototype);
+    Object.create = function(obj) {
+        function F(){} // 桥接函数
+        F.prototype = obj;
+        return new F();
+    }
+
+    // ES6+
+    Cat.prototype.__proto__ = Animal.prototype; // not-recommended
+
+    Object.setPrototypeOf(Cat.prototype, Animal.prototype);
+```
+
+Inspecting "Inheritance" Relationships
+
+```JS
+    let tom = new Cat({name: 'Tom'});
+    tom.hello();
+    tom instanceof Cat;
+    tom instanceof Animal;
+    tom.__proto__.__proto__;
+```
